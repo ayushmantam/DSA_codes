@@ -1,0 +1,28 @@
+class Solution {
+public:
+    void helper(int n,int k,vector<vector<int>>&result,vector<int>&grp,int i){
+        if(i>n){
+            if(grp.size()==k)
+            result.push_back(grp);
+            return;
+        }
+
+        //include
+        grp.push_back(i);
+        helper(n,k,result,grp,i+1);
+        grp.pop_back();
+
+        //exclude
+        helper(n,k,result,grp,i+1);
+    }
+    vector<vector<int>> combine(int n, int k) {
+        
+        vector<vector<int>>result;
+        vector<int>grp;
+        int i=1;
+        helper(n,k,result,grp,i);
+
+        return result;
+        
+    }
+};

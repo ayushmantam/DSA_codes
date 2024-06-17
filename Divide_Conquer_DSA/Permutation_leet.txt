@@ -1,0 +1,29 @@
+class Solution {
+public:
+    void helper(vector<int>& nums, vector<vector<int>>& result, vector<int>& grp, int i){
+        if(i == nums.size()){
+            result.push_back(grp);
+            return;
+        }
+
+        for(int j = ; j < nums.size(); j++){
+            //THIS IS VERY IMP STEP  DRY RUN MUST DO 
+            // Check if nums[j] is already in the current permutation
+            if(find(grp.begin(), grp.end(), nums[j]) != grp.end()) {
+                continue;
+            }
+
+            grp.push_back(nums[j]);
+            helper(nums, result, grp, i + 1);
+            grp.pop_back();
+        }
+    }
+
+    vector<vector<int>> permute(vector<int>& nums) {
+       vector<vector<int>> result;
+       vector<int> grp;
+       int i = 0; // Start from index 0
+       helper(nums, result, grp, i);
+       return result;
+    }
+};

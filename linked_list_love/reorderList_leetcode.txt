@@ -1,0 +1,85 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+typedef ListNode Node;
+    Node *findMid(Node *&head)
+{
+    if (head == NULL)
+    {
+        cout << "LL is empty\n";
+    }
+    if (head->next == NULL)
+    {
+        // only one node in LL
+        return head;
+    }
+
+    // LL have one or more node
+
+    else // hum else ke baahar bhi likh sakte hai
+    {
+        Node *slow = head;
+        Node *fast = head;
+        while (slow != NULL && fast != NULL)
+        {
+            fast = fast->next; // de placeek sath aage nhi bada sakte
+            if (fast != NULL)
+            {
+                fast = fast->next;
+                slow = slow->next; // slow tabhi aage bdhega jab fast do step aage bhadhga
+            }
+        }
+        return slow;
+    }
+}
+
+    Node *reverseusingLoop(Node *&head)
+    {
+    Node *prev = NULL;
+    Node *curr = head;
+    while (curr != NULL)   
+    {
+        Node *temp = curr->next;   //here temp=> forward
+        curr->next = prev;
+        prev = curr;
+        curr = temp;
+    }
+    //returning new head which is prev
+    return prev;
+    }
+
+    void reorderList(ListNode* &head) {
+    // single and only two nodes case
+    if (head == NULL || head->next == NULL) return;
+
+    Node* first = head;
+    Node* mid = findMid(head);
+    Node* second = mid->next;
+    mid->next = NULL;
+
+    second = reverseusingLoop(second); // Reverse the second half of the linked list
+
+    while (first && second) {
+        Node* forward_first = first->next;
+        Node* forward_second = second->next;
+
+        first->next = second;
+        second->next = forward_first;
+
+        first = forward_first;
+        second = forward_second;
+    }
+
+    return;
+}
+
+};

@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int numberOfBeams(vector<string>& bank) {
+        int n = bank.size();
+        int m= bank[0].size();
+        vector<int> rows(n);
+
+        for (int i = 0; i < n; i++) {
+            int device = 0;
+            for (int j = 0; j < m; j++) {
+                if (bank[i][j] == '1') {
+                    device++;
+                }
+            }
+            if(device!=0)
+            rows.push_back(device);
+        }
+
+        //CHECKING ROWS ARRAY
+        // for(int i=0;i<rows.size();i++){
+        //     cout<<rows[i]<<" ";
+        // }
+        
+        int prevDevice = rows[0];
+        int beam = 0;
+        for (int i = 1; i < rows.size(); i++) {
+            int currDevice = rows[i];
+            if (currDevice != 0 && prevDevice != 0) {
+                beam += currDevice * prevDevice;
+            }
+            prevDevice = currDevice;
+        }
+
+        return beam;
+    }
+};
+
+// 3 0 2 1
+// 0 3 0

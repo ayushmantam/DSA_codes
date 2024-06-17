@@ -1,0 +1,42 @@
+#include <climits>
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if (divisor == 0) {
+            return INT_MAX;  // or handle it as needed
+        }
+
+        // Handle overflow case
+        if (dividend == INT_MIN && divisor == -1) {
+            return INT_MAX;
+        }
+
+        // Determine the sign of the result
+        int sign = (dividend < 0) ^ (divisor < 0) ? -1 : 1;
+
+        // Take absolute values to simplify calculations
+        long long ldividend = abs((long long)dividend);
+        long long ldivisor = abs((long long)divisor);
+
+        // Initialize variables for binary search
+        long long s = 0;
+        long long e = ldividend;
+        long long mid, ans = 0;
+
+        // Perform binary search to find the quotient
+        while (s <= e) {
+            mid = s + (e - s) / 2;
+
+            if (mid * ldivisor <= ldividend) {
+                ans = mid;
+                s = mid + 1;
+            } else {
+                e = mid - 1;
+            }
+        }
+
+        // Apply sign to the result
+        return sign * ans;
+    }
+};

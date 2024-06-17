@@ -1,0 +1,27 @@
+class Solution {
+public:
+        bool canWin(int n) {
+            // Base case: If the number is 1, the current player loses.
+            if (n == 1) {
+                return false;
+            }
+
+            // Try all possible moves
+            for (int x = 1; x < n; ++x) {
+                if (n % x == 0) {
+                    // If a move is found where the opponent loses, the current
+                    // player wins.
+                    if (!canWin(n - x)) {
+                        return true;
+                    }
+                }
+            }
+
+            // If no winning move is found, the current player loses.
+            return false;
+        }
+
+        bool divisorGame(int n) {
+            return canWin(n);
+        }
+};

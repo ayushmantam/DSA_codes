@@ -1,0 +1,42 @@
+class Solution {
+public:
+    void storeSubsets(vector<int>nums,vector<vector<int>>&answer,vector<int>current,int i){
+      //base case
+        if(i == nums.size()){
+          answer.push_back(current);
+          return;
+        }
+
+      //exclude
+      storeSubsets(nums,answer,current,i+1);
+
+      //include
+      current.push_back(nums[i]);
+      storeSubsets(nums,answer, current,i+1);
+
+    }
+    void storeSubsets2(vector<int>nums,vector<vector<int>>&answer,vector<int>current,int i){
+      //base case
+        if(i == nums.size()){
+          answer.push_back(current);
+          return;
+        }
+
+      //include
+      current.push_back(nums[i]);
+      storeSubsets2(nums,answer, current,i+1);
+      current.pop_back();  //By backtracking 
+
+      //exclude
+      storeSubsets2(nums,answer,current,i+1);
+    }
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>>answer;
+        vector<int>current;
+        int i=0;
+        // storeSubsets(nums,answer,current,i);
+        storeSubsets2(nums,answer,current,i);
+
+        return answer;
+    }
+};

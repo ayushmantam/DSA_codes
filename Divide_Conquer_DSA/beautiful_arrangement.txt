@@ -1,0 +1,1 @@
+M1  find all prmutatons  and count permutation which are following condition

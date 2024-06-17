@@ -1,0 +1,124 @@
+#include <algorithm>
+#include <string>
+#include <vector>
+
+class Solution {
+public:
+    void CountOnesZeros(const string& str, int& one, int& zero) {
+        for (auto ch : str) {
+            if (ch == '1') {
+                one++;
+            }
+            if (ch == '0') {
+                zero++;
+            }
+        }
+    }
+
+    int helper(const vector<string>& strs, int m, int n, int index) {
+        if (index < 0) {
+            return 0;
+        }
+
+        int one = 0;
+        int zero = 0;
+        CountOnesZeros(strs[index], one, zero);
+        int include = 0;
+        if (m >= zero && n >= one)
+            include = 1 + helper(strs, m - zero, n - one, index - 1);
+
+        int exclude = helper(strs, m, n, index - 1);
+
+        return max(include, exclude);
+    }
+    int helperMem(const vector<string>& strs, int m, int n, int index,
+                  vector<vector<vector<int>>>& dp) {
+        if (index < 0) {
+            return 0;
+        }
+
+        int one = 0;
+        int zero = 0;
+        CountOnesZeros(strs[index], one, zero);
+        if (dp[index][m][n] != -1) {
+            return dp[index][m][n];
+        }
+        if (m >= zero && n >= one) {
+            int include = 1 + helperMem(strs, m - zero, n - one, index - 1, dp);
+            int exclude = helperMem(strs, m, n, index - 1, dp);
+
+            return dp[index][m][n] = max(include, exclude);
+        } else {
+            // If the current string cannot be included, move to the next one
+            return dp[index][m][n] = helperMem(strs, m, n, index - 1, dp);
+        }
+    }
+    
+    int helperTab(vector<string>& strs, int m, int n) {
+        int len = strs.size();
+        vector<vector<vector<int>>> dp(
+            len + 1, vector<vector<int>>(m + 1, vector<int>(n + 1, 0)));
+
+        for (int index = 1; index <=len; index++) {
+            for (int M = 0; M <= m; M++) {
+                for (int N = 0; N <=n; N++) {
+                    int one = 0;
+                    int zero = 0;
+                    CountOnesZeros(strs[index], one, zero);
+                    int include=0;
+                    if (M >= zero && N >= one)
+                        include = 1 + dp[index-1][M-zero][N-one] ;
+
+
+                    int exclude = 0+ dp[index-1][M][N];
+
+                    dp[index-1][M][N]=max(include,exclude);
+                }
+            }
+        }
+
+        return dp[len][m][n];
+    }
+    int findMaxForm(const vector<string>& strs, int m, int n) {
+        int len = strs.size();
+        // Initialize a 3D dp array with size (len + 1) x (m + 1) x (n + 1) and initialize to 0.
+        vector<vector<vector<int>>> dp(
+            len + 1, vector<vector<int>>(m + 1, vector<int>(n + 1, 0)));
+
+        // Loop through all strings in strs.
+        for (int index = 0; index < len; ++index) {
+            int one = 0, zero = 0;
+            CountOnesZeros(strs[index], one, zero);
+
+            // Iterate over all possible values of M (0 to m) and N (0 to n).
+            for (int M = 0; M <= m; ++M) {
+                for (int N = 0; N <= n; ++N) {
+                    // Calculate the count if the current string is included.
+                    int include = 0;
+                    if (M >= zero && N >= one) {
+                        include = 1 + dp[index][M - zero][N - one];
+                    }
+
+                    // Calculate the count if the current string is excluded.
+                    int exclude = dp[index][M][N];
+
+                    // Update the dp array with the maximum count.
+                    dp[index + 1][M][N] = max(include, exclude);
+                }
+            }
+        }
+
+        // The final result is stored at dp[len][m][n].
+        return dp[len][m][n];
+    }
+    // int findMaxForm(vector<string>& strs, int m, int n) {
+    //     int len = strs.size();
+    //     int index = len - 1;
+    //     // return helper(strs, m, n, index);
+    //     vector<vector<vector<int>>> dp(
+    //         len + 1, vector<vector<int>>(m + 1, vector<int>(n + 1, -1)));
+    //     // return helperMem(strs, m, n, index, dp);
+    //     return helperTab(strs,m,n);
+    // }
+};
+// WE HAVE DONE THIS BY TWO METHOD WIHTOUT ELSE CALL OR WITH ELSE CALL

@@ -1,0 +1,49 @@
+class Solution {
+public:
+    
+    bool checkInclusion(string s1, string s2) {
+        int len_s1=s1.length();
+        int len_s2=s2.length();
+        if(len_s1>len_s2){
+            return false;
+        }
+
+        unordered_map<char,int>freq;
+        for(auto ch:s1){
+            freq[ch]++;
+        }
+
+        //  USING SLIDING WINDOW METHOD
+
+        //for first window in s2
+        unordered_map<char,int>window_freq;
+        for(int i=0; i< len_s1;i++){
+            window_freq[s2[i]]++;
+        }
+
+        //ie first window in s2 is permutation of s1
+        if(freq==window_freq)  //both maps are equal
+        return true;
+
+
+        //Now iterate window in s2  and update frequencies in window_freq 
+        for(int i=len_s1 ; i <len_s2 ; i++){
+
+            //decrese freq in leaving ch
+            window_freq[s2[i-len_s1]]--;
+            
+            if (window_freq[s2[i - len_s1]] == 0) {
+            window_freq.erase(s2[i - len_s1]);
+            }
+
+            window_freq[s2[i]]++;
+
+            //current window is permutaion
+            if(freq==window_freq)  //both maps are equal
+            return true;
+
+        }
+
+        return false;
+    }
+};

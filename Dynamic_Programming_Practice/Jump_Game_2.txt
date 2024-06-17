@@ -1,0 +1,71 @@
+class Solution {
+public:
+    int helperRec(vector<int>& nums, int index) {
+
+        if (index == nums.size() - 1) {
+            return 0;
+        }
+        if (index >= nums.size()) {
+            return INT_MAX;
+        }
+        int mini = INT_MAX;
+        int stop = min(nums[index] + index, (int)(nums.size() - 1));
+        for (int i = index + 1; i <= stop; i++) {
+
+            int ans = helperRec(nums, i);
+            if (ans != INT_MAX) {
+                mini = min(ans + 1, mini);
+            }
+        }
+
+        return mini;
+    }
+    int helperMem(vector<int>& nums, int index, vector<int>& dp) {
+
+        if (index == nums.size() - 1) {
+            return 0;
+        }
+        if (index >= nums.size()) {
+            return INT_MAX;
+        }
+        if (dp[index] != INT_MAX) {
+            return dp[index];
+        }
+        int mini = INT_MAX;
+        int stop = min(nums[index] + index, (int)(nums.size() - 1));
+        for (int i = index + 1; i <= stop; i++) {
+
+            int ans = helperMem(nums, i, dp);
+            if (ans != INT_MAX) {
+                mini = min(ans + 1, mini);
+            }
+        }
+        dp[index] = mini;
+        return dp[index];
+    }
+    int helperTab(vector<int>& nums, int index) {
+        vector<int> dp(nums.size(), INT_MAX);
+        dp[nums.size() - 1] = 0;
+
+        for (int i = nums.size() - 2; i >= index; --i) {
+            int mini = INT_MAX;
+            int stop = min(nums[i] + i, (int)(nums.size() - 1));
+            for (int j = i + 1; j <= stop; ++j) {
+                if (dp[j] != INT_MAX) {
+                    mini = min(dp[j] + 1, mini);
+                }
+            }
+            dp[i] = mini;
+        }
+        return dp[0];
+    }
+    int jump(vector<int>& nums) {
+        int index = 0;
+        // return helperRec(nums, index);
+
+        // vector<int>dp(nums.size()+1,INT_MAX);
+        // return helperMem(nums,index,dp);
+
+        return helperTab(nums, index);
+    }
+};

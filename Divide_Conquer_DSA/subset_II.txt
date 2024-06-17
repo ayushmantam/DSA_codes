@@ -1,0 +1,34 @@
+class Solution {
+public:
+    void helper(vector<int>& nums,set<vector<int>>&st,vector<int>&current,int i){
+        if(i==nums.size()){
+            st.insert(current);
+            return;
+        }
+
+
+
+        //include
+
+        current.push_back(nums[i]);
+        helper(nums,st,current,i+1);
+        current.pop_back();//backtacking
+
+        //exclude
+        helper(nums,st,current,i+1);
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        sort(nums.begin(),nums.end());   
+        //sort karne se 212 ka 122 ho jehe to 2nd 2 bhi whi current dega 
+        vector<vector<int>>ans;
+        set<vector<int>>st;
+        vector<int>current;
+
+        int i=0;
+        helper(nums,st,current,i);
+        for(auto it:st){
+            ans.push_back(it);
+        }
+        return ans;
+    }
+};

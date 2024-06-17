@@ -1,0 +1,68 @@
+class Solution {
+public:
+    bool helperRec(vector<int>& nums, int index) {
+        if (index == nums.size() - 1) {
+            return true;
+        }
+
+        if (index >= nums.size()) {
+            return false;
+        }
+        int stop = min(nums[index] + index, (int)(nums.size() - 1));
+        bool ans = false;
+        for (int i = index + 1; i <= stop; i++) {
+            ans = helperRec(nums, i);
+        }
+
+        return ans;
+    }
+    bool helperMem(vector<int>& nums, int index, vector<int>& dp) {
+        if (index == nums.size() - 1) {
+            return true;
+        }
+
+        if (index >= nums.size()) {
+            return false;
+        }
+
+        if (dp[index] != -1) {
+            return dp[index];
+        }
+        int stop = min(nums[index] + index, (int)(nums.size() - 1));
+        bool ans = false;
+        for (int i = index + 1; i <= stop; i++) {
+            ans = helperMem(nums, i, dp);
+        }
+        dp[index] = ans;
+        return dp[index];
+    }
+
+    bool helperTab(vector<int>& nums, int index) {
+        int n = nums.size();
+        vector<bool> dp(n, false);
+        dp[n - 1] = true; // The last index is always reachable
+
+        for (int i = n - 2; i >= 0; --i) {
+            int stop = min(nums[i] + i, n - 1);
+            for (int j = i + 1; j <= stop; ++j) {
+                if (dp[j]) {
+                    dp[i] = true;
+                    break; // Once we find a reachable index, break the inner
+                           // loop
+                }
+            }
+        }
+
+        return dp[0];
+    }
+
+    bool canJump(vector<int>& nums) {
+        int index = 0;
+
+        // return helperRec(nums, index);
+        // vector<int>dp(nums.size()+1,-1);
+        // return helperMem(nums,index,dp);
+
+        return helperTab(nums, index);
+    }
+};

@@ -1,0 +1,47 @@
+class Solution {
+public:
+    // MEMOIZATION - RECUSION won't be able to solve this problem as we are
+    // iterating over a sum array of 10001 size so it will throw a TLE , with
+    // the help of memoization overlapping subproblems are resolved leading to a
+    // faster solution.
+    int f(int index, vector<int>& sum, vector<int>& dp) {
+        // same memoization funtion int f() of house robber
+        if (index == 0)
+            return sum[0];
+        if (index < 0)
+            return 0;
+
+        if (dp[index] != -1)
+            return dp[index];
+
+        int pick = sum[index] + f(index - 2, sum, dp);
+        int notpick = 0 + f(index - 1, sum, dp);
+
+        return dp[index] = max(pick, notpick);
+    }
+    int solveRec(vector<int>& sum, int index) {
+        if (index == 0) {
+            return sum[0];
+        }
+        if (index < 0) {
+            return 0;
+        }
+        int pick = sum[index] + solveRec(sum, index - 2);
+        int notPick = 0 + solveRec(sum, index - 1);
+
+        int ans = max(pick, notPick);
+        return ans;
+    }
+    int deleteAndEarn(vector<int>& nums) {
+        int n = 10001;
+         
+        vector<int> sum(n, 0);
+        for (auto num : nums) {
+            sum[num] += num;
+        }
+        int m = sum.size();
+        // return solveRec(sum, m - 1);
+        vector<int> dp(n, -1);
+        return f(m - 1, sum, dp);
+    }
+};

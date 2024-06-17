@@ -1,0 +1,48 @@
+#include <queue>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        int n = mat.size();
+        int m = mat[0].size();
+
+        vector<vector<bool>> visited(n, vector<bool>(m, false));
+        queue<pair<pair<int, int>, int>> q;
+
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < m; col++) {
+                if (mat[row][col] == 0) {
+                    q.push({{row, col}, 0});
+                    visited[row][col] = true;
+                }
+            }
+        }
+
+        int delRow[] = {-1, 0, +1, 0};
+        int delCol[] = {0, +1, 0, -1};
+
+        vector<vector<int>> distance(n, vector<int>(m, 0));
+
+        while (!q.empty()) {
+            int r = q.front().first.first;
+            int c = q.front().first.second;
+            int d = q.front().second;
+            q.pop();
+            distance[r][c] = d;
+
+            for (int i = 0; i < 4; i++) {
+                int nrow = r + delRow[i];
+                int ncol = c + delCol[i];
+
+                if (nrow >= 0 && nrow < n && ncol >= 0 && ncol < m &&
+                    mat[nrow][ncol] == 1 && !visited[nrow][ncol]) {
+                    q.push({{nrow, ncol}, d + 1});
+                    visited[nrow][ncol] = true;
+                }
+            }
+        }
+        return distance;
+    }
+};
